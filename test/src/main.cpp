@@ -12,7 +12,6 @@ int main(int argc, char * argv[])
 	auto size = rect1.size();
 	float x = rect1.x(); float y = rect1.y(); float width = rect1.width(); float height = rect1.height();
 
-	rpos::core::RectangleF rect2( 15.0, 15.0, 20, 20);
 	if( rect1.contains(rect2) ) 
 	{
 		std::cout << "point or rectangle contains in this rect1" << std::endl;
