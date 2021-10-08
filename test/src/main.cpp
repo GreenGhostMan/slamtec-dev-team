@@ -1,20 +1,42 @@
-#include <iostream>
 #include <rpos/robot_platforms/slamware_core_platform.h>
-#include <rpos/core/detail/geometry_rectangle.h>
-//#include <Vector2.hpp>
-//using namespace rpos::robot_platforms;
+#include <iostream>
+#include <rpos/features/motion_planner/feature.h>
+#include <rpos/core/pose.h>
+#include <chrono>
 
-int main(int argc, char * argv[])
-{
-	//rpos::core::detail::RectangleF<float> rect1(Vector2f,Vector2f);
-	rpos::core::RectangleF rect1(10.0, 10.0, 100.0, 50.0);
-	auto position = rect1.position();
-	auto size = rect1.size();
-	float x = rect1.x(); float y = rect1.y(); float width = rect1.width(); float height = rect1.height();
+using namespace std;
+using namespace rpos::robot_platforms;
 
-	if( rect1.contains(rect2) ) 
-	{
-		std::cout << "point or rectangle contains in this rect1" << std::endl;
+int main(int argc,const char **argv){
+	SlamwareCorePlatform platform = SlamwareCorePlatform::connect(argv[1], 1445);
+	rpos::features::motion_planner::MoveOptionFlag MoveOptionFlagWithYaw ;
+
+	std::vector<rpos::core::Location> pointsToGo;
+	pointsToGo.push_back(rpos::core::Location(0.5,0));
+
+	rpos::actions::MoveAction moveAction = platform.getCurrentAction();
+
+	if(moveAction.getStatus() == rpos::core::ActionStatusFinished){
+		moveAction = platform.moveTo(pointsToGo, false, true);
+
+		while(!(moveAction.getStatus()== rpos::core::ActionStatusFinished)){
+			if(moveAction.getStatus() == rpos::core::ActionStatusWaitingForStart){
+				cout<<"WAITING TO START"<<endl;
+			}
+			else if(moveAction.getStatus() == rpos::core::ActionStatusRunning){
+				cout<<"RUNNING"<<endl;
+			}
+			else if(moveAction.getStatus() == rpos::core::ActionStatusPaused){
+				cout<<"PAUSED"<<endl;
+			}
+			else if(moveAction.getStatus() == rpos::core::ActionStatusStopped){
+				cout<<"STOPPED"<<endl;
+			}
+			else if(moveAction.getStatus() == rpos::core::ActionStatusError){
+				cout<<"ERROR"<<endl;
+			}		
+		}
+		cout<<"OK Finished"<<endl;
 	}
 
 	return 0;
