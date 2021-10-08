@@ -18,9 +18,5 @@ int main(int argc, char * argv[])
 		std::cout << "point or rectangle contains in this rect1" << std::endl;
 	}
 
-	// rect1.empty() which means ( width() < epsilon && height() < epsilon )
-	// rect1.unionOf(const RectangleF& dest); // calculate union of current and reference rectangles
-	// rect1.intersectionOf(const RectangleF & dedt)
-	// rect1.area() const 
 	return 0;
 }
