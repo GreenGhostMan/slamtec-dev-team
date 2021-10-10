@@ -14,11 +14,9 @@ int main(int argc,const char **argv){
 
 	 std::vector<rpos::core::Location> pointsToGo;
      pointsToGo.push_back(rpos::core::Location(2,0));
-	 //rpos::core::Location start(0.02,0);
     
 	rpos::actions::MoveAction moveAction = platform.getCurrentAction();
-    //rpos::core::ACTION_DIRECTION actionDirection = rpos::core::ACTION_DIRECTION::FORWARD;
-	//rpos::core::Direction direction(actionDirection);
+	
 	if(moveAction.getStatus() == rpos::core::ActionStatusFinished){
         
 		//rpos::actions::MoveAction moveBy = platform.moveBy(direction);
