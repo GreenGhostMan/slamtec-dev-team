@@ -9,7 +9,7 @@
 #include "bitmap_image.hpp"						// C++ Bitmap library from http://www.partow.net 
 #define DEFAULT_DUMPIMAGE_FILENAME "rom_home"
 using namespace rpos::robot_platforms;
-using namespace rpos::system::detail;
+//using namespace rpos::system::detail;
 
 void displayMapInfo(rpos::features::location_provider::Map map);
 void displayLocalizationInfo(const rpos::core::Pose &pose);

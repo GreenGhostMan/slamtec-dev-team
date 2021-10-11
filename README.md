@@ -10,7 +10,7 @@ build လုပ်ရန်
 
 $ make
 
-build with debug
+debug လုပ်ဖို့
 
 $ make DEBUG=1
 
@@ -18,8 +18,17 @@ build process ကိုကြည့်ချင်ရင်
 
 $ make V=1 
 
-executable များကို /path/to/slamware_sdk_linux-x86_64-gcc4.8/linux-x86_64-release/output တွင်ရယူပါ။ 
+binary ကို ဖျက်ဖို့
 
+$ make clean
+
+executable များကို /path/to/slamware_sdk_linux-x86_64-gcc4.8/linux-x86_64-release/output တွင်ရယူပါ။ development မြန်အောင်ဒီလိုလုပ်ပါ။
+
+$ runapp="/path/to/slamware_sdk_linux-x86_64-gcc4.8/linux-x86_64-release/output/"
+$ make &> out
+$ $runapp/your_bin
+
+container ထဲမှာ  vim , gdb တို့ကို install လုပ်ထားပါ။ 
 compiler ပြောင်းချင်ပါက mak_def.inc မှာ CC နဲ့ CXX ကိုပြင်ပါ။
 support compiler များကတော့ x86_64 ( recommend ubuntu 14.04 ) အတွက် gcc-4.6, g++-4.6, gcc-4.8, g++-4.8 ဖြစ်ပြီး
 arm အတွက်ကတော့ arm-linux-gnueabihf-gcc-4.8 နဲ့ arm-linux-gnueabihf-g++-4.8 ဖြစ်ပါတယ်။
