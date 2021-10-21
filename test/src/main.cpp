@@ -6,38 +6,10 @@
 #include <rpos/core/geometry.h>
 #include <regex>
 
-// std::string ip_address = "";
-// const char *ip_regex ="\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"; //192.168.100.61 ip
-const double pi = 3.1415927;
+double pi = 3.1415927;
 
-// void Help(std::string application_name) {
-// 	std::cout<<"Slamware console"<<std::endl << 
-// 		"Usage"<<application_name<<"<slamware_address>"<<std::endl;
-	
-// }
-// bool ParseCommandLine(int argc, const char *argv[])
-// {
-// 	bool show_help = false;
-// 	for(int pos = 1; pos<argc; pos++) {
-// 		const char *current = argv[pos];
-// 		if (strcmp(current, "-h") == 0)
-// 			show_help = true;
-// 	    else 
-// 			ip_address = current;		
-// 	}
-// 	std::regex reg(ip_regex);
-// 	if (!show_help && !std::regex_match(ip_address, reg)) 
-// 		show_help = true;
-// 	if (show_help) {
-// 		Help("move_to_spot");
-// 		return false;
-// 	}
-// 	return true;
-// }
 int main(int argc, const char* argv[]) {
-	// if(!ParseCommandLine(argc,argv))
-	// return 1;
-	// std::cout<<"Connecting to "<<ip_address<<">>>>"<<std::endl;
+
 	try {
 		rpos::robot_platforms::SlamwareCorePlatform sdp = rpos::robot_platforms::SlamwareCorePlatform::connect(argv[1],1445);
 		std::cout<<"SDK Version"<<sdp.getSDKVersion()<<std::endl;
@@ -48,38 +20,43 @@ int main(int argc, const char* argv[]) {
 		std::cout << "x: " << pose.x() << ", ";
 		std::cout << "y: " << pose.y() << ", ";
 		std::cout << "yaw: " << pose.yaw() << std::endl;
-
-		rpos::core::Location location1 = sdp.getLocation();
-                std::cout << "Robot Location: " << std::endl;
-                std::cout << "x: " << location1.x() << ", ";
-                std::cout << "y: " << location1.y() << std::endl;
-
+        
 		rpos::actions::MoveAction action = sdp.getCurrentAction();
 		if(action)
 			action.cancel();
-		 rpos::features::motion_planner::MoveOptions options;
-		 options.flag = rpos::features::motion_planner::MoveOptionFlag( rpos::features::motion_planner::MoveOptionFlagMilestone |  rpos::features::motion_planner::MoveOptionFlagPrecise);
+		rpos::features::motion_planner::MoveOptions options;
+		options.flag = rpos::features::motion_planner::MoveOptionFlag( rpos::features::motion_planner::MoveOptionFlagMilestone |  rpos::features::motion_planner::MoveOptionFlagPrecise);
 		std::cout<<"Ready!!! "<<std::endl;
-		action = sdp.moveTo(rpos::core::Location(-0.3,0),options,0); // a loot g twr ml :3
-		// action = sdp.rotateTo(rpos::core::Rotation(pi,0,0));
-		
-
-		//action = sdp.rotateTo(rpos::core::Rotation(0,0,0));
-
+        double target=0;
+		// action = sdp.moveTo(rpos::core::Location(-0.3,0),options,0); // a loot g twr ml :3
+		 action = sdp.rotateTo(rpos::core::Rotation(target,0,0));
 
 		std::cout<<" Rotating "<<std::endl;
 		action.waitUntilDone();
 		std::cout<<" Finished "<<std::endl;
+
 		rpos::core::Pose pose2 = sdp.getPose();
 		std::cout << "Robot after Pose: " << std::endl;
 		std::cout << "x: " << pose2.x() << ", ";
 		std::cout << "y: " << pose2.y() << ", ";
 		std::cout << "yaw: " << pose2.yaw() << std::endl;
 
-		rpos::core::Location location2= sdp.getLocation();
-        std::cout << "Robot Location: " << std::endl;
-            std::cout << "x: " << location2.x() << ", ";
-                std::cout << "y: " << location2.y() << std::endl;
+		float error=target-pose2.yaw();
+        if(!(error<0.2 && error>-0.2)){
+			if(error>=0.2){
+			  action = sdp.rotateTo(rpos::core::Rotation(target+0.54,0,0));
+			}
+			else if(error<=-0.2){
+			  action = sdp.rotateTo(rpos::core::Rotation(target-0.54,0,0));
+			}
+            
+		}
+			action.waitUntilDone();
+		rpos::core::Pose pose3 = sdp.getPose();
+		std::cout << "Robot After Correction: " << std::endl;
+		std::cout << "x: " << pose3.x() << ", ";
+		std::cout << "y: " << pose3.y() << ", ";
+		std::cout << "yaw: " << pose3.yaw() << std::endl;
 
 		if(action.getStatus()==rpos::core::ActionStatusError)
 			std::cout<<"Action Failed: "<<action.getReason()<<std::endl;
